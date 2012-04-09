@@ -54,7 +54,7 @@ module OAuth
 
       def authorize
         if params[:oauth_token]
-          @token = ::RequestToken.find_by_token! params[:oauth_token]
+          @token = ::RequestToken.where(:token => params[:oauth_token]).first
           oauth1_authorize
         else
           if request.post?
@@ -132,7 +132,7 @@ module OAuth
 
       # http://tools.ietf.org/html/draft-ietf-oauth-v2-22#section-4.1.1
       def oauth2_token_authorization_code
-        @verification_code =  @client_application.oauth2_verifiers.find_by_token params[:code]
+        @verification_code =  @client_application.oauth2_verifiers.where(:token => params[:code]).first
         unless @verification_code
           oauth2_error
           return
